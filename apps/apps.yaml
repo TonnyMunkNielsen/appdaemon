@@ -1,0 +1,31 @@
+hello_world:
+  module: hello
+  class: HelloWorld
+light_automation_hallway:
+  module: light_automation
+  class: AutomateLights
+  log: light_automation
+  lights: 
+  - name: light.hallway_lights
+    brightness_on: 100
+    brightness_dim: 33
+  - name: light.laundry_room_lights
+    brightness_on: 50
+    brightness_dim: 1
+  timer_on_to_dim: 7
+  timer_dim_to_off: 3
+  timer_manual_mode_off: 1200 # Time until manual mode automatically deactivates in seconds (1200 sec = 20 min).
+  sensor: binary_sensor.motion_sensor_hallway
+  button_mac: 28:6d:97:00:01:07:be:82
+
+# light_automation_laundry_room:
+#   module: light_automation
+#   class: AutomateLights
+#   log: light_automation
+#   lights: light.laundry_room_lights
+#   sensor: binary_sensor.motion_sensor_hallway
+#   # manual_mode_switch: input_boolean.hallway_and_laundry_room_manual_mode
+#   timer_on_to_dim: 7
+#   timer_dim_to_off: 3
+#   brightness_on: 50
+#   brightness_dim: 1

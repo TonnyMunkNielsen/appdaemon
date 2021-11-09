@@ -1,0 +1,6 @@
+requests==2.26.0
+packaging==20.9
+hassapi
+pytest
+appdaemon-testing
+appdaemontestframework
