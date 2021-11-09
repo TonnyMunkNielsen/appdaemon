@@ -1,0 +1,29 @@
+#secrets: secrets.yaml
+appdaemon:
+  latitude: !secret latitude
+  longitude: !secret longitude
+  elevation: 0
+  time_zone: !secret time_zone
+  plugins:
+    HASS:
+      type: hass
+      ha_url: http://192.168.0.112:8123
+      token: !secret appdaemon_ha_token
+      app_init_delay: 20
+http:
+  url: http://192.168.0.112:5050
+admin:
+api:
+hadashboard:
+logs:
+  error_log:
+    filename: /conf/logs/error.log
+  main_log:
+    filename: /conf/logs/appdaemon.log
+  access_log:
+    filename: /conf/logs/access.log
+  diag_log:
+    filename: /conf/logs/diag.log
+  light_automation:
+    name: LightAutomation
+    filename: /conf/logs/applogs/light_automation.log
