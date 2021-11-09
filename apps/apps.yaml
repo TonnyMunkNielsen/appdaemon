@@ -16,16 +16,40 @@ light_automation_hallway:
   timer_dim_to_off: 3
   timer_manual_mode_off: 1200 # Time until manual mode automatically deactivates in seconds (1200 sec = 20 min).
   sensor: binary_sensor.motion_sensor_hallway
-  button_mac: 28:6d:97:00:01:07:be:82
+  sensor_activate_value:
+  sensor_deactivate_value:
+  button_mac: 28:6d:97:00:01:11:6d:c7 # Office button
+light_automation_small_bathroom:
+  module: light_automation
+  class: AutomateLights
+  log: light_automation
+  lights: 
+  - name: light.small_bathroom_lights
+    brightness_on: 100
+    brightness_dim: 33
+  timer_on_to_dim: 120 # 2 minutes
+  timer_dim_to_off: 5
+  timer_manual_mode_off: 900 # Time until manual mode automatically deactivates in seconds (900 sec = 15 min).
+  sensor: binary_sensor.motion_sensor_small_bathroom
+  sensor_activate_value: on
+  sensor_deactivate_value: off
+  button_mac: 28:6d:97:00:01:07:c2:46 # Small bathroom button
+light_automation_main_bathroom:
+  module: light_automation
+  class: AutomateLights
+  log: light_automation
+  lights: 
+  - name: light.main_bathroom_lights
+    brightness_on: 5
+    brightness_dim: 5
+  timer_on_to_dim: 300 # 5 minutes
+  timer_dim_to_off: 1
+  timer_manual_mode_off: 0 # Time until manual mode automatically deactivates in seconds (120 sec = 2 min).
+  sensor: binary_sensor.door_sensor_main_bathroom
+  sensor_activate_value: Open
+  sensor_deactivate_value: Closed
 
-# light_automation_laundry_room:
-#   module: light_automation
-#   class: AutomateLights
-#   log: light_automation
-#   lights: light.laundry_room_lights
-#   sensor: binary_sensor.motion_sensor_hallway
-#   # manual_mode_switch: input_boolean.hallway_and_laundry_room_manual_mode
-#   timer_on_to_dim: 7
-#   timer_dim_to_off: 3
-#   brightness_on: 50
-#   brightness_dim: 1
+  # button_mac: 28:6d:97:00:01:11:64:12 # Bedroom button
+  # button_mac: 28:6d:97:00:01:11:6d:c7 # Laundry room button
+  # button_mac: 28:6d:97:00:01:07:be:82 # Office button
+  # button_mac: 28:6d:97:00:01:07:c2:46 # Small bathroom button
