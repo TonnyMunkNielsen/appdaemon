@@ -1,0 +1,6 @@
+logs
+secrets.yaml
+compiled
+apps/__pycache__/
+# Include the following
+!/.gitignore
