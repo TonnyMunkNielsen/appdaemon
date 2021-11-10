@@ -73,7 +73,7 @@ class AutomateLights(hass.Hass):
         self.log("8Manual mode value: " + str(self.manual_mode))
         self.log("Button with MAC " + self.args["button_mac"] + ": Button pressed.")
         # Toggling manual_mode.
-        self.setManualMode
+        self.manual_mode = not self.manual_mode
         self.cancelTimer(self.on_off_timer)
         self.cancelTimer(self.manual_mode_timer)
         # Call flashWarning if manual mode is true
@@ -91,11 +91,7 @@ class AutomateLights(hass.Hass):
 
     # value = None --> Toggle manual mode.
     def setManualMode(self, kwargs):
-        if(kwargs["value"] is None):
-            self.log("Toggling manual mode from " + str(self.manual_mode) + \
-                     " to " + str(not self.manual_mode) + ".")
-            self.manual_mode=not self.manual_mode
-        elif(kwargs["value"] is True):
+        if(kwargs["value"] is True):
             self.log("Setting manual mode from " + str(self.manual_mode) + \
                      " to on.")
             self.manual_mode=True

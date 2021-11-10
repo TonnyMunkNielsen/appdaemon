@@ -18,7 +18,7 @@ light_automation_hallway:
   sensor: binary_sensor.motion_sensor_hallway
   sensor_activate_value:
   sensor_deactivate_value:
-  button_mac: 28:6d:97:00:01:11:6d:c7 # Office button
+  button_mac: 28:6d:97:00:01:11:6d:c7 # Laundry room button
 light_automation_small_bathroom:
   module: light_automation
   class: AutomateLights
