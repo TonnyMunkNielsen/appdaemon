@@ -16,7 +16,7 @@ class AutomateLights(hass.Hass):
                  format(self.get_state(self.args["sensor"])))
         if(self.on is None or self.on is False):
             self.listen_state(self.turnLightsOn,
-                              self.args["sensor"], new=self.args["sensor_activate_value"], old=self.args["sensor_deactivate_value"])
+                              self.args["sensor"], new=str(self.args["sensor_activate_value"]), old=str(self.args["sensor_deactivate_value"]))
         if(self.on is None or self.on is True):
             self.listen_state(
                 self.dimLights, self.args["sensor"], new=self.args["sensor_deactivate_value"], old=self.args["sensor_activate_value"], duration=self.args["timer_on_to_dim"])
@@ -60,8 +60,7 @@ class AutomateLights(hass.Hass):
                          str(self.args["timer_dim_to_off"]) + " seconds.")
                 self.turn_on(light.get("name"),
                              brightness_pct=light.get("brightness_dim"))
-            self.on_off_timer = self.run_in(
-                self.turnLightsOff, self.args["timer_dim_to_off"])
+            self.on_off_timer = self.run_in(self.turnLightsOff, self.args["timer_dim_to_off"])
 
     def cancelTimer(self, handle):
         self.log("7Manual mode value: " + str(self.manual_mode))
@@ -75,15 +74,15 @@ class AutomateLights(hass.Hass):
         # Toggling manual_mode.
         self.manual_mode = not self.manual_mode
         self.cancelTimer(self.on_off_timer)
-        self.cancelTimer(self.manual_mode_timer)
+        # self.cancelTimer(self.manual_mode_timer)
         # Call flashWarning if manual mode is true
         if(self.manual_mode):
             self.on=None
             self.log("Manual mode has been turned on, calling flashWarning.")
             self.flashcount=0
             self.run_in(self.flashWarning, 1)
-            self.manual_mode_timer=self.run_in(self.setManualMode, int(
-                self.args["timer_manual_mode_off"]), value=False)
+            # self.manual_mode_timer=self.run_in(self.setManualMode, int(
+                # self.args["timer_manual_mode_off"]), value=False)
 
         if(not self.manual_mode and self.get_state(self.args["sensor"]) is 'on'):
             # TODO: Make this work, don't think it works?
@@ -93,11 +92,11 @@ class AutomateLights(hass.Hass):
     def setManualMode(self, kwargs):
         if(kwargs["value"] is True):
             self.log("Setting manual mode from " + str(self.manual_mode) + \
-                     " to on.")
+                     " to True.")
             self.manual_mode=True
         elif(kwargs["value"] is False):
             self.log("Setting manual mode from " + str(self.manual_mode) + \
-                     " to off.")
+                     " to False.")
             self.manual_mode=False
 
     def flashWarning(self, kwargs):
