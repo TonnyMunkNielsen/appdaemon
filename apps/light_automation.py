@@ -16,7 +16,7 @@ class AutomateLights(hass.Hass):
                  format(self.get_state(self.args["sensor"])))
         if(self.on is None or self.on is False):
             self.listen_state(self.turnLightsOn,
-                              self.args["sensor"], new=str(self.args["sensor_activate_value"]), old=str(self.args["sensor_deactivate_value"]))
+                              self.args["sensor"], new=self.args["sensor_activate_value"], old=self.args["sensor_deactivate_value"])
         if(self.on is None or self.on is True):
             self.listen_state(
                 self.dimLights, self.args["sensor"], new=self.args["sensor_deactivate_value"], old=self.args["sensor_activate_value"], duration=self.args["timer_on_to_dim"])
