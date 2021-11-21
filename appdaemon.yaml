@@ -27,3 +27,6 @@ logs:
   light_automation:
     name: LightAutomation
     filename: /conf/logs/applogs/light_automation.log
+  light_automation_daylight:
+    name: LightAutomationDaylight
+    filename: /conf/logs/applogs/light_automation_daylight.log
