@@ -9,9 +9,21 @@ light_automation_hallway:
   - name: light.hallway_lights
     brightness_on: 100
     brightness_dim: 33
+    brightness_on_night_start: 66
+    brightness_dim_night_start: 20
+    brightness_on_nadir: 10
+    brightness_dim_nadir: 10
+    brightness_on_night_end: 33
+    brightness_dim_night_end: 10
   - name: light.laundry_room_lights
     brightness_on: 50
     brightness_dim: 1
+    brightness_on_night_start: 25
+    brightness_dim_night_start: 1
+    brightness_on_nadir: 1
+    brightness_dim_nadir: 1
+    brightness_on_night_end: 10
+    brightness_dim_night_end: 1
   timer_on_to_dim: 7
   timer_dim_to_off: 3
   timer_manual_mode_off: 1200 # Time until manual mode automatically deactivates in seconds (1200 sec = 20 min).
@@ -27,6 +39,12 @@ light_automation_small_bathroom:
   - name: light.small_bathroom_lights
     brightness_on: 100
     brightness_dim: 33
+    brightness_on_night_start: 66
+    brightness_dim_night_start: 20
+    brightness_on_nadir: 5
+    brightness_dim_nadir: 5
+    brightness_on_night_end: 25
+    brightness_dim_night_end: 5
   timer_on_to_dim: 120 # 2 minutes
   timer_dim_to_off: 5
   timer_manual_mode_off: 900 # Time until manual mode automatically deactivates in seconds (900 sec = 15 min).
@@ -40,8 +58,14 @@ light_automation_main_bathroom:
   log: light_automation
   lights: 
   - name: light.main_bathroom_lights
-    brightness_on: 5
-    brightness_dim: 5
+    brightness_on: 100
+    brightness_dim: 33
+    brightness_on_night_start: 66
+    brightness_dim_night_start: 20
+    brightness_on_nadir: 5
+    brightness_dim_nadir: 5
+    brightness_on_night_end: 33
+    brightness_dim_night_end: 10
   timer_on_to_dim: 120 # 2 minutes
   timer_dim_to_off: 1
   timer_manual_mode_off: 120 # Time until manual mode automatically deactivates in seconds (120 sec = 2 min).
