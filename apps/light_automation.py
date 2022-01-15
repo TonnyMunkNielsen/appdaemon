@@ -101,17 +101,17 @@ class AutomateLights(hass.Hass):
             # self.manual_mode_timer=self.run_in(self.setManualMode, int(
                 # self.args["timer_manual_mode_off"]), value=False)
 
-        if(not self.manual_mode and self.get_state(self.args["sensor"]) is 'on'):
+        if(not self.manual_mode and self.get_state(self.args["sensor"]) == 'on'):
             # TODO: Make this work, don't think it works?
             self.run_in(self.turnLightsOn, 1)
 
     # value = None --> Toggle manual mode.
     def setManualMode(self, kwargs):
-        if(kwargs["value"] is True):
+        if(kwargs["value"] == True):
             self.log("Setting manual mode from " + str(self.manual_mode) + \
                      " to True.")
             self.manual_mode=True
-        elif(kwargs["value"] is False):
+        elif(kwargs["value"] == False):
             self.log("Setting manual mode from " + str(self.manual_mode) + \
                      " to False.")
             self.manual_mode=False
