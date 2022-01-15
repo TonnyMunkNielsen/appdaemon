@@ -39,5 +39,5 @@ class AutomateLightsDaylight(hass.Hass):
             self.log(light.get("name") + ": Turning on light. Hue: " + str(hue) + ", Saturation: " + str(saturation) + ", Brightness_percent: " + str(brightness_percent) + ".")
             rgb = colorsys.hsv_to_rgb(hue/360, saturation/100, brightness_percent/100)
             rgb = tuple([round(255*x) for x in rgb])
-            self.log(light.get("name") + ": RGB: " + rgb)
+            self.log(light.get("name") + ": RGB: " + str(rgb))
             self.turn_on(light.get("name"), rgb_color = rgb)

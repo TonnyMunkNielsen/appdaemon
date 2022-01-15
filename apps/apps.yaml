@@ -45,7 +45,7 @@ light_automation_small_bathroom:
     brightness_dim_nadir: 5
     brightness_on_night_end: 25
     brightness_dim_night_end: 5
-  timer_on_to_dim: 120 # 2 minutes
+  timer_on_to_dim: 300 # 5 minutes
   timer_dim_to_off: 5
   timer_manual_mode_off: 900 # Time until manual mode automatically deactivates in seconds (900 sec = 15 min).
   sensor: binary_sensor.motion_sensor_small_bathroom
@@ -66,9 +66,9 @@ light_automation_main_bathroom:
     brightness_dim_nadir: 5
     brightness_on_night_end: 33
     brightness_dim_night_end: 10
-  timer_on_to_dim: 120 # 2 minutes
+  timer_on_to_dim: 300 # 5 minutes
   timer_dim_to_off: 1
-  timer_manual_mode_off: 120 # Time until manual mode automatically deactivates in seconds (120 sec = 2 min).
+  timer_manual_mode_off: 300 # Time until manual mode automatically deactivates in seconds (300 sec = 5 min).
   sensor: binary_sensor.door_sensor_main_bathroom
   sensor_activate_value: "on"
   sensor_deactivate_value: "off"
