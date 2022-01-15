@@ -23,8 +23,8 @@ import colorsys
 class AutomateLightsDaylight(hass.Hass):
 
     def initialize(self):
-        self.listen_state(self.turnLightsOn, "sensor.daylight", new="sunset_end")
-        self.listen_state(self.turnLightsOff, "sensor.daylight", new="sunrise_start")
+        self.listen_state(self.turnLightsOn, "sensor.daylight", new="dusk")
+        self.listen_state(self.turnLightsOff, "sensor.daylight", new="dawn")
 
     def turnLightsOff(self, entity, attribute, old, new, kwargs):
         for light in self.args['lights']:
@@ -39,5 +39,5 @@ class AutomateLightsDaylight(hass.Hass):
             self.log(light.get("name") + ": Turning on light. Hue: " + str(hue) + ", Saturation: " + str(saturation) + ", Brightness_percent: " + str(brightness_percent) + ".")
             rgb = colorsys.hsv_to_rgb(hue/360, saturation/100, brightness_percent/100)
             rgb = tuple([round(255*x) for x in rgb])
-            self.log(rgb)
+            self.log(light.get("name") + ": RGB: " + str(rgb))
             self.turn_on(light.get("name"), rgb_color = rgb)
