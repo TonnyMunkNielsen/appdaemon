@@ -30,3 +30,6 @@ logs:
   light_automation_daylight:
     name: LightAutomationDaylight
     filename: /conf/logs/applogs/light_automation_daylight.log
+  event_publisher:
+    name: EventPublisher
+    filename: /conf/logs/applogs/event_publisher.log
