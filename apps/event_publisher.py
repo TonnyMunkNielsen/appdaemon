@@ -16,7 +16,7 @@ class EventPublisher(hass.Hass):
             self.log(entity + ": Publishing 'turn off' event.")
 
     def publishTurnOnEvent(self, entity, state, kwargs):
-        self.fire_event(globals.EVENT_STATE_CHANGE_ON, )
+        self.fire_event(globals.EVENT_STATE_CHANGE_ON)
 
-    def publishTurnOffEvent(self, entity, attribute, old, new, kwargs):
-        
+    def publishTurnOffEvent(self, entity, state, kwargs):
+        self.fire_event(globals.EVENT_STATE_CHANGE_OFF)
