@@ -78,12 +78,7 @@ light_automation_daylight:
   - name: light.outside_garage_wall
   - name: light.outside_hedge
   - name: light.outside_mailbox
-event_publisher_motion_sensor_hallway:
-  module: event_publisher
-  class: EventPublisher
-  log: event_publisher
-  sensor: binary_sensor.motion_sensor_hallway
-
+  
   # button_mac: 28:6d:97:00:01:11:64:12 # Laundry room button
   # button_mac: 28:6d:97:00:01:11:6d:c7 # Small bathroom button
   # button_mac: 28:6d:97:00:01:07:be:82 # Office button

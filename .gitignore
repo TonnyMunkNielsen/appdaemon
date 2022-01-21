@@ -2,5 +2,6 @@ logs
 secrets.yaml
 compiled
 apps/__pycache__/
+.vscode
 # Include the following
 !/.gitignore
