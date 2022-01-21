@@ -33,3 +33,6 @@ logs:
   event_publisher:
     name: EventPublisher
     filename: /conf/logs/applogs/event_publisher.log
+  event_handler:
+    name: EventHandler
+    filename: /conf/logs/applogs/event_handler.log

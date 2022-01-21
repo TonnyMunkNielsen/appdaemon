@@ -14,21 +14,21 @@ class AutomateLights(hass.Hass):
                  format(self.get_state(self.args["sensor"])))
         if(self.on is None or self.on is False):
             self.listen_state(self.turnLightsOn,
-                              self.args["sensor"], new=self.args["sensor_activate_value"], old=self.args["sensor_deactivate_value"])
+                            self.args["sensor"], new=self.args["sensor_activate_value"], old=self.args["sensor_deactivate_value"])
         if(self.on is None or self.on is True):
             self.listen_state(
                 self.dimLights, self.args["sensor"], new=self.args["sensor_deactivate_value"], old=self.args["sensor_activate_value"], duration=self.args["timer_on_to_dim"])
         try:
             # 1001: held, 1002: push, 1004: double.
             self.listen_event(self.buttonEvent, event="deconz_event",
-                              value="1001", unique_id=self.args["button_mac"])
+                            value="1001", unique_id=self.args["button_mac"])
         except KeyError:
             pass
 
     def turnLightsOff(self, kwargs):
         for light in self.args['lights']:
             self.log(light.get("name") + ": Lights have been dimmed for " +
-                     str(self.args["timer_dim_to_off"]) + " seconds, turning off")
+                    str(self.args["timer_dim_to_off"]) + " seconds, turning off")
             self.turn_off(light.get("name"))
         self.on = False
 
@@ -109,11 +109,11 @@ class AutomateLights(hass.Hass):
     def setManualMode(self, kwargs):
         if(kwargs["value"] == True):
             self.log("Setting manual mode from " + str(self.manual_mode) + \
-                     " to True.")
+                    " to True.")
             self.manual_mode=True
         elif(kwargs["value"] == False):
-            self.log("Setting manual mode from " + str(self.manual_mode) + \
-                     " to False.")
+            self.log("Setting manual mode from " + str(self.manual_mode) + 
+                    " to False.")
             self.manual_mode=False
 
     def flashWarning(self, kwargs):

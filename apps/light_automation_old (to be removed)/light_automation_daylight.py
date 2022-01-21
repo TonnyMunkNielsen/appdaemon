@@ -23,6 +23,7 @@ import colorsys
 class AutomateLightsDaylight(hass.Hass):
 
     def initialize(self):
+        self.api = self.get_app()
         self.listen_state(self.turnLightsOn, "sensor.daylight", new="dusk")
         self.listen_state(self.turnLightsOff, "sensor.daylight", new="dawn")
 
