@@ -22,8 +22,6 @@ class EventHandler(hass.Hass):
                 self.turn_off(__device_id)
         else:
             raise NotImplementedError("No method to handle device type: " + __device_type)
-    
-    def handle_light_event(self, event_name, kwargs):
 
 
 
