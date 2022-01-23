@@ -6,9 +6,9 @@ class EventPublisher(hass.Hass):
     def initialize(self):
         __entity_id = self.args["sensor"]
         self.log(__entity_id + ": Sensor has been turned " + format(self.get_state(__entity_id)))
-        self.listen_state(self.stateChangeEvent, __entity_id)
+        self.listen_state(self.state_change_event, __entity_id)
 
-    def stateChangeEvent(self, entity, attribute, old, new, kwargs):
+    def state_change_event(self, entity, attribute, old, new, kwargs):
         __event = None
         
         if(new == 'on' and old == "off"):
@@ -18,9 +18,9 @@ class EventPublisher(hass.Hass):
             self.log(entity + ": Publishing 'turn off' event.")
             __event = globals.EVENT_STATE_CHANGE_OFF
         
-        self.publishEvent(entity, __event)
+        self.publish_event(entity, __event)
 
-    def publishEvent(self, event, entity_id):
+    def publish_event(self, event, entity_id):
         if(event is not None):
             self.fire_event(event, entity_id=entity_id)
         else:

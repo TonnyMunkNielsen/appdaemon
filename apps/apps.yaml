@@ -1,9 +1,11 @@
 event_publisher:
-  module: light_automation_daylight
-  class: AutomateLightsDaylight
-  log: light_automation_daylight
-  lights: 
-  - name: light.outside_door_wall
-  - name: light.outside_garage_wall
-  - name: light.outside_hedge
-  - name: light.outside_mailbox
+  module: event_publisher_hallway_motion_sensor
+  class: EventPublisher
+  log: event_publisher_hallway_motion_sensor
+  sensor: binary_sensor.motion_sensor_hallway
+event_handler:
+  module: event_publisher_hallway_lights
+  class: EventHandler
+  log: event_publisher_hallway_lights
+  sensor: binary_sensor.motion_sensor_hallway
+  device: light.hallway_lights
