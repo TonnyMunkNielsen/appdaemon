@@ -2,5 +2,6 @@ requests==2.26.0
 packaging==20.9
 hassapi
 pytest
+pytest_mock
 appdaemon-testing
 appdaemontestframework
