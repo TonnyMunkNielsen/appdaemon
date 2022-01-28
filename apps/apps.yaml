@@ -60,11 +60,11 @@ light_automation_main_bathroom:
   - name: light.main_bathroom_lights
     brightness_on: 100
     brightness_dim: 33
-    brightness_on_night_start: 66
-    brightness_dim_night_start: 20
-    brightness_on_nadir: 5
-    brightness_dim_nadir: 5
-    brightness_on_night_end: 33
+    brightness_on_night_start: 33
+    brightness_dim_night_start: 33
+    brightness_on_nadir: 2
+    brightness_dim_nadir: 2
+    brightness_on_night_end: 10
     brightness_dim_night_end: 10
   timer_on_to_dim: 300 # 5 minutes
   timer_dim_to_off: 1

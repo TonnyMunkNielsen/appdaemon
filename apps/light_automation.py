@@ -32,7 +32,7 @@ class AutomateLights(hass.Hass):
             self.turn_off(light.get("name"))
         self.on = False
 
-    def turn_lights_on(self, entity, attribute, old, new, kwargs):
+    def turn_lights_on(self, entity=None, attribute=None, old=None, new=None, kwargs=None):
         if(not self.manual_mode):
             self._cancel_timer(self.on_off_timer)
             __daylight_state = self.get_state('sensor.daylight')
