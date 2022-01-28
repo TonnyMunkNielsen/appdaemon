@@ -1,8 +1,6 @@
-import hassapi as hass
-import datetime
-import distutils.util
-import random
 import colorsys
+import random
+import hassapi as hass
 
 # Sensor State	    Description
 # sunrise_start	    sunrise (top edge of the sun appears on the horizon)
@@ -20,24 +18,35 @@ import colorsys
 # nautical_dawn	    nautical dawn (morning nautical twilight starts)
 # dawn	            dawn (morning nautical twilight ends, morning civil twilight starts)
 
-class AutomateLightsDaylight(hass.Hass):
 
+class AutomateLightsDaylight(hass.Hass):
     def initialize(self):
         self.listen_state(self.turnLightsOn, "sensor.daylight", new="dusk")
         self.listen_state(self.turnLightsOff, "sensor.daylight", new="dawn")
 
     def turnLightsOff(self, entity, attribute, old, new, kwargs):
-        for light in self.args['lights']:
+        for light in self.args["lights"]:
             self.log(light.get("name") + ": Turning off light.")
             self.turn_off(light.get("name"))
 
     def turnLightsOn(self, entity, attribute, old, new, kwargs):
-        for light in self.args['lights']:
+        for light in self.args["lights"]:
             brightness_percent = 100
             hue = random.randrange(0, 359, 30)
             saturation = random.randint(80, 100)
-            self.log(light.get("name") + ": Turning on light. Hue: " + str(hue) + ", Saturation: " + str(saturation) + ", Brightness_percent: " + str(brightness_percent) + ".")
-            rgb = colorsys.hsv_to_rgb(hue/360, saturation/100, brightness_percent/100)
-            rgb = tuple([round(255*x) for x in rgb])
+            self.log(
+                light.get("name")
+                + ": Turning on light. Hue: "
+                + str(hue)
+                + ", Saturation: "
+                + str(saturation)
+                + ", Brightness_percent: "
+                + str(brightness_percent)
+                + "."
+            )
+            rgb = colorsys.hsv_to_rgb(
+                hue / 360, saturation / 100, brightness_percent / 100
+            )
+            rgb = tuple([round(255 * x) for x in rgb])
             self.log(light.get("name") + ": RGB: " + str(rgb))
-            self.turn_on(light.get("name"), rgb_color = rgb)
+            self.turn_on(light.get("name"), rgb_color=rgb)
