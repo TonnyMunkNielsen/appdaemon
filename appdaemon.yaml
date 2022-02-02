@@ -2,18 +2,18 @@
 appdaemon:
   latitude: !secret latitude
   longitude: !secret longitude
-  elevation: 0
+  elevation: !secret elevation
   time_zone: !secret time_zone
   plugins:
     HASS:
       type: hass
-      ha_url: http://192.168.0.112:8123
+      ha_url: !secret appdaemon_ha_url
       token: !secret appdaemon_ha_token
       app_init_delay: 20
 http:
-  url: http://192.168.0.112:5050
+  url: !secret appdaemon_dash_url
 admin:
-api:
+api: 
 hadashboard:
 logs:
   error_log:
