@@ -1,4 +1,4 @@
-#secrets: secrets.yaml
+secrets: /secrets.yaml
 appdaemon:
   latitude: !secret latitude
   longitude: !secret longitude
