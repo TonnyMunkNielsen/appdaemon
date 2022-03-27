@@ -86,3 +86,7 @@ light_automation_daylight:
   # button_mac: 28:6d:97:00:01:11:6d:c7 # Small bathroom button
   # button_mac: 28:6d:97:00:01:07:be:82 # Office button
   # button_mac: 28:6d:97:00:01:07:c2:46 # Bedroom button
+light_sequence:
+  module: light_sequence
+  class: LightSequence
+  log: light_sequence

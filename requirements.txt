@@ -4,3 +4,4 @@ hassapi
 pytest
 appdaemon-testing
 appdaemontestframework
+Pillow
