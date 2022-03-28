@@ -11,9 +11,8 @@ class LightSequence(hass.Hass):
         # self.listen_event(self.lights_cb, LIGHT_SEQUENCE, None, brightness_pct=[75, 100], hue=[0, 360, 30], saturation=[75, 100], entity="light.office_ceiling_desktop")
 
     def lights_cb(self, event, data, kwargs):
-        self.turn_off("light.office_ceiling_closet")
+        entityName = "light.office_ceiling_closet"
+        self.turn_off(entityName)
         for i in range(0, 10):
-            self.log("Randomizing light at delay: " + str(i))
-            self.run_in(
-                LightAutomationHelper.turnLightOnRandom, i, entity="light.office_ceiling_closet", attribute=None, old=None, new=None, kwargs=kwargs
-            )
+            self.log("Randomizing light at delay: " + str(i*3))
+            self.run_in(LightAutomationHelper.turnLightOnRandom(self, entityName, kwargs), i*3)

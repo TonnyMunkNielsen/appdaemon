@@ -31,4 +31,5 @@ class AutomateLightsDaylight(hass.Hass):
 
     def turnLightsOn(self, entity, attribute, old, new, kwargs):
         for light in self.args['lights']:
-            LightAutomationHelper.turnLightOnRandom(light.get("name"), attribute, old, new, kwargs)
+            lightName = light.get("name")
+            LightAutomationHelper.turnLightOnRandom(lightName, kwargs)

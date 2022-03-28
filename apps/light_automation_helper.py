@@ -7,11 +7,11 @@ class LightAutomationHelper(hass.Hass):
     def initialize(self):
         self.log("Do Nothing.")
 
-    def turnLightOnRandom(self, entity, attribute, old, new, kwargs):
-        kwargs = _setDefaultKwargsIfEmpty(kwargs)
-        brightness_percent = random.randint(kwargs.get("brightness_pct")[0], kwargs.get("brightness_pct")[1])
-        hue = random.randrange(kwargs.get("hue")[0], kwargs.get("hue")[1], kwargs.get("hue")[2])
-        saturation = random.randint(kwargs.get("saturation")[0], kwargs.get("saturation")[1])
+    def turnLightOnRandom(self, entity, kwargs):
+        tempKwargs = _setDefaultKwargsIfEmpty(kwargs)
+        brightness_percent = random.randint(tempKwargs.get("brightness_pct")[0], tempKwargs.get("brightness_pct")[1])
+        hue = random.randrange(tempKwargs.get("hue")[0], tempKwargs.get("hue")[1], tempKwargs.get("hue")[2])
+        saturation = random.randint(tempKwargs.get("saturation")[0], tempKwargs.get("saturation")[1])
         self.log(entity + ": Turning on light. Hue: " + str(hue) + ", Saturation: " +
                  str(saturation) + ", Brightness_percent: " + str(brightness_percent) + ".")
         rgb = colorsys.hsv_to_rgb(
