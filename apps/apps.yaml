@@ -1,4 +1,4 @@
-light_automation_helper:
+light_automation_helper: # Remove this.
   module: light_automation_helper
   class: LightAutomationHelper
   log: light_automation_helper
@@ -61,12 +61,12 @@ light_automation_main_bathroom:
   - name: light.main_bathroom_lights
     brightness_on: 100
     brightness_dim: 33
-    brightness_on_night_start: 33
-    brightness_dim_night_start: 33
+    brightness_on_night_start: 2
+    brightness_dim_night_start: 2
     brightness_on_nadir: 2
     brightness_dim_nadir: 2
-    brightness_on_night_end: 10
-    brightness_dim_night_end: 10
+    brightness_on_night_end: 5
+    brightness_dim_night_end: 5
   timer_on_to_dim: 300 # 5 minutes
   timer_dim_to_off: 1
   timer_manual_mode_off: 300 # Time until manual mode automatically deactivates in seconds (300 sec = 5 min).
