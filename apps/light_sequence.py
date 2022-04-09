@@ -8,8 +8,8 @@ LIGHT_SEQUENCE = "LIGHT_SEQUENCE"
 
 class LightSequence(hass.Hass):
     def initialize(self):
-        self.listen_event(self.lights_cb, LIGHT_SEQUENCE, brightness_pct=[75, 100], hue=[0, 360, 30], saturation=[75, 100], entity="light.office_ceiling_closet", delay=3, number_of_runs=10, turn_off=True)
-        self.listen_event(self.lights_cb, LIGHT_SEQUENCE, brightness_pct=[75, 100], hue=[0, 360, 30], saturation=[75, 100], entity="light.office_ceiling_desktop", delay=3, number_of_runs=11, turn_off=True)
+        self.listen_event(self.lights_cb, LIGHT_SEQUENCE, brightness_pct=[75, 100], hue=[0, 360, 30], saturation=[75, 100], entity="light.small_bathroom_mirror", delay=3, number_of_runs=10, turn_off=True)
+        self.listen_event(self.lights_cb, LIGHT_SEQUENCE, brightness_pct=[75, 100], hue=[0, 360, 30], saturation=[75, 100], entity="light.small_bathroom_shower", delay=3, number_of_runs=11, turn_off=True)
 
     def lights_cb(self, event, data, kwargs):
         kwargs = setDefaultKwargsIfEmptyLightSequence(kwargs)  # TODO: Test.
@@ -55,7 +55,7 @@ def setDefaultKwargsIfEmptyLightSequence(kwargs):
         # delay in seconds between sequence progressions
         kwargs['delay'] = 3
     if kwargNotSet(kwargs, 'number_of_runs'):
-        # number_of_runs is how many sequence progressions will take place 
+        # number_of_runs is how many sequence progressions will take place.
         # TODO: Implement '-1' which means keeps looping until another event.
         kwargs['number_of_runs'] = 10
     if kwargNotSet(kwargs, 'turn_off'):

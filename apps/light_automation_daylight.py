@@ -1,6 +1,3 @@
-import colorsys
-import random
-
 import hassapi as hass
 
 from light_automation_helper import (getRgbIntTupleFromHsv, kwargNotSet,
