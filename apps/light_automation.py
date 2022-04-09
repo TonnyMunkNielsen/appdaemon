@@ -1,5 +1,6 @@
 import hassapi as hass
 
+
 class AutomateLights(hass.Hass):
     on_off_timer = None
     manual_mode_timer = None
