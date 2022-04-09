@@ -1,10 +1,10 @@
 import hassapi as hass
 
 from light_automation_helper import (
-    getRgbIntTupleFromHsv,
-    kwargNotSet,
-    randintFromList,
-    randrangeFromList,
+    get_rgb_int_tuple_from_hsv,
+    kwarg_not_set,
+    randint_from_list,
+    randrange_from_list,
 )
 
 LIGHT_SEQUENCE = "LIGHT_SEQUENCE"
@@ -36,7 +36,7 @@ class LightSequence(hass.Hass):
         )
 
     def lights_cb(self, event, data, kwargs):
-        kwargs = setDefaultKwargsIfEmptyLightSequence(kwargs)  # TODO: Test.
+        kwargs = set_default_kwargs_if_empty_light_sequence(kwargs)  # TODO: Test.
         turn_off = kwargs["turn_off"]
         if turn_off:
             self.turn_off(kwargs["entity"])
@@ -46,7 +46,7 @@ class LightSequence(hass.Hass):
             delay = multiplier * kwargs["delay"]
             self.log("Randomizing light at delay: " + str(delay))
             self.run_in(
-                self.turnLightOnRandomLightSequence,
+                self.turn_light_on_random_light_sequence,
                 delay,
                 hue=kwargs["hue"],
                 saturation=kwargs["saturation"],
@@ -54,20 +54,20 @@ class LightSequence(hass.Hass):
                 entity=kwargs["entity"],
             )
 
-    def turnLightOnRandomLightSequence(self, kwargs):
+    def turn_light_on_random_light_sequence(self, kwargs):
         entity = kwargs.get("entity")
-        brightness_percent = randintFromList(kwargs["brightness_pct"])
-        saturation = randrangeFromList(kwargs["saturation"])
-        hue = randrangeFromList(kwargs["hue"])
-        self.logHsv(entity, brightness_percent, saturation, hue)
-        rgb = getRgbIntTupleFromHsv(brightness_percent, saturation, hue)
-        self.logRgb(entity, rgb)
+        brightness_percent = randint_from_list(kwargs["brightness_pct"])
+        saturation = randrange_from_list(kwargs["saturation"])
+        hue = randrange_from_list(kwargs["hue"])
+        self.log_hsv(entity, brightness_percent, saturation, hue)
+        rgb = get_rgb_int_tuple_from_hsv(brightness_percent, saturation, hue)
+        self.log_rgb(entity, rgb)
         self.turn_on(entity, rgb_color=rgb)
 
-    def logRgb(self, entity, rgb):
+    def log_rgb(self, entity, rgb):
         self.log(entity + ": RGB: " + str(rgb))
 
-    def logHsv(self, entity, brightness_percent, saturation, hue):
+    def log_hsv(self, entity, brightness_percent, saturation, hue):
         self.log(
             entity
             + ": Turning on light. Hue: "
@@ -80,24 +80,24 @@ class LightSequence(hass.Hass):
         )
 
 
-def setDefaultKwargsIfEmptyLightSequence(kwargs):
-    if kwargNotSet(kwargs, "brightness_pct"):
+def set_default_kwargs_if_empty_light_sequence(kwargs):
+    if kwarg_not_set(kwargs, "brightness_pct"):
         # brightness_pct = [from, to]
         kwargs["brightness_pct"] = [1, 100]
-    if kwargNotSet(kwargs, "hue"):
+    if kwarg_not_set(kwargs, "hue"):
         # hue = [from, to (not including), step]
         kwargs["hue"] = [0, 360, 30]
-    if kwargNotSet(kwargs, "saturation"):
+    if kwarg_not_set(kwargs, "saturation"):
         # saturation = [from, to]
         kwargs["saturation"] = [1, 100]
-    if kwargNotSet(kwargs, "delay"):
+    if kwarg_not_set(kwargs, "delay"):
         # delay in seconds between sequence progressions
         kwargs["delay"] = 3
-    if kwargNotSet(kwargs, "number_of_runs"):
+    if kwarg_not_set(kwargs, "number_of_runs"):
         # number_of_runs is how many sequence progressions will take place.
         # TODO: Implement '-1' which means keeps looping until another event.
         kwargs["number_of_runs"] = 10
-    if kwargNotSet(kwargs, "turn_off"):
+    if kwarg_not_set(kwargs, "turn_off"):
         # turn_off specifies if a turn_off-call should be prepended to the sequence.
         kwargs["turn_off"] = True
     return kwargs

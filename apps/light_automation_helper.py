@@ -8,7 +8,7 @@ class LightAutomationHelper(hass.Hass):
     def initialize(self):
         self.log("Do Nothing.")
 
-    def turnLightOnRandom(self, **kwargs):
+    def turn_light_on_random(self, **kwargs):
         entity = kwargs.get("entity")
         tempKwargs = self._setDefaultKwargsIfEmpty(*kwargs)
         brightness_percent = random.randint(
@@ -36,22 +36,22 @@ class LightAutomationHelper(hass.Hass):
         self.turn_on(entity, rgb_color=rgb)
 
 
-def kwargNotSet(kwargs, name):
+def kwarg_not_set(kwargs, name):
     return name not in kwargs
 
 
-def randintFromList(attr):
-    return applyFunOnList(random.randint, attr)
+def randint_from_list(attr):
+    return apply_fun_on_list(random.randint, attr)
 
 
-def randrangeFromList(attr):
-    return applyFunOnList(random.randrange, attr)
+def randrange_from_list(attr):
+    return apply_fun_on_list(random.randrange, attr)
 
 
-def applyFunOnList(fun, list):
+def apply_fun_on_list(fun, list):
     return fun(*list)
 
 
-def getRgbIntTupleFromHsv(brightness_percent, saturation, hue):
+def get_rgb_int_tuple_from_hsv(brightness_percent, saturation, hue):
     rgb = colorsys.hsv_to_rgb(hue / 360, saturation / 100, brightness_percent / 100)
     return tuple([round(255 * x) for x in rgb])
