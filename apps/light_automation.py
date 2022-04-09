@@ -58,7 +58,7 @@ class AutomateLights(hass.Hass):
             __daylight_state = self.get_state("sensor.daylight")
             self.log("Daylight sensor state is " + __daylight_state)
             for light in self.args["lights"]:
-                __brightness = self._get_on_brightness(__daylight_state, light)
+                __brightness = _get_on_brightness(__daylight_state, light)
                 # Log entry
                 self.log(
                     light.get("name")
@@ -80,7 +80,7 @@ class AutomateLights(hass.Hass):
             )
             __daylight_state = self.get_state("sensor.daylight")
             for light in self.args["lights"]:
-                __brightness = self._get_dim_brightness(__daylight_state, light)
+                __brightness = _get_dim_brightness(__daylight_state, light)
                 # Log entries
                 self.log(
                     light.get("name")
@@ -98,44 +98,6 @@ class AutomateLights(hass.Hass):
             self.on_off_timer = self.run_in(
                 self.turn_lights_off, self.args["timer_dim_to_off"]
             )
-
-    def _get_on_brightness(self, daylight_state, light):
-        __brightness_type = "on"
-        return self._get_brightness(daylight_state, light, __brightness_type)
-
-    def _get_dim_brightness(self, daylight_state, light):
-        __brightness_type = "dim"
-        return self._get_brightness(daylight_state, light, __brightness_type)
-
-    def _get_brightness(self, daylight_state, light, brightness_type):
-        # Validate brightness type.
-        self._validate_brightness_type(brightness_type)
-        # Default brightness - daytime.
-        __brightness = light.get("brightness_{}".format(brightness_type))
-        # If it's night, set brightness appripriately.
-        if (
-            daylight_state == "nadir"
-            and light.get("brightness_{}_nadir".format(brightness_type)) is not None
-        ):
-            __brightness = light.get("brightness_{}_nadir".format(brightness_type))
-        elif (
-            daylight_state == "night_start"
-            and light.get("brightness_{}_night_start".format(brightness_type))
-            is not None
-        ):
-            __brightness = light.get(
-                "brightness_{}_night_start".format(brightness_type)
-            )
-        elif (
-            daylight_state == "night_end"
-            and light.get("brightness_{}_night_end".format(brightness_type)) is not None
-        ):
-            __brightness = light.get("brightness_{}_night_end".format(brightness_type))
-        return __brightness
-
-    def _validate_brightness_type(self, type):
-        if type != "on" and type != "dim":
-            raise ValueError("Unsupported brightness type: " + type)
 
     def _cancel_timer(self, handle):
         if handle is not None and self.timer_running(handle):
@@ -176,3 +138,42 @@ class AutomateLights(hass.Hass):
         self.flashcount += 1
         if self.flashcount < 4:
             self.run_in(self._flash_warning, 1)
+
+
+def _get_on_brightness(daylight_state, light):
+    __brightness_type = "on"
+    return _get_brightness(daylight_state, light, __brightness_type)
+
+
+def _get_dim_brightness(daylight_state, light):
+    __brightness_type = "dim"
+    return _get_brightness(daylight_state, light, __brightness_type)
+
+
+def _get_brightness(daylight_state, light, brightness_type):
+    # Validate brightness type.
+    _validate_brightness_type(brightness_type)
+    # Default brightness - daytime.
+    __brightness = light.get("brightness_{}".format(brightness_type))
+    # If it's night, set brightness appripriately.
+    if (
+        daylight_state == "nadir"
+        and light.get("brightness_{}_nadir".format(brightness_type)) is not None
+    ):
+        __brightness = light.get("brightness_{}_nadir".format(brightness_type))
+    elif (
+        daylight_state == "night_start"
+        and light.get("brightness_{}_night_start".format(brightness_type)) is not None
+    ):
+        __brightness = light.get("brightness_{}_night_start".format(brightness_type))
+    elif (
+        daylight_state == "night_end"
+        and light.get("brightness_{}_night_end".format(brightness_type)) is not None
+    ):
+        __brightness = light.get("brightness_{}_night_end".format(brightness_type))
+    return __brightness
+
+
+def _validate_brightness_type(type):
+    if type != "on" and type != "dim":
+        raise ValueError("Unsupported brightness type: " + type)

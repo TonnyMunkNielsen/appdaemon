@@ -1,7 +1,10 @@
 .vscode
+.pytest_cache
 logs
 secrets.yaml
 compiled
 apps/__pycache__/
+tests/__pycache__/
+__pycache__/
 # Include the following
 !/.gitignore
