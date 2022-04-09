@@ -5,3 +5,4 @@ pytest
 pytest_mock
 appdaemon-testing
 appdaemontestframework
+Pillow

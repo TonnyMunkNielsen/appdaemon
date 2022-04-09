@@ -30,3 +30,9 @@ logs:
   light_automation_daylight:
     name: LightAutomationDaylight
     filename: /conf/logs/applogs/light_automation_daylight.log
+  light_sequence:
+    name: LightSequence
+    filename: /conf/logs/applogs/light_sequence.log
+  light_automation_helper:
+    name: LightAutomationHelper
+    filename: /conf/logs/applogs/light_automation_helper.log
