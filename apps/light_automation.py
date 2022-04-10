@@ -109,15 +109,16 @@ class AutomateLights(hass.Hass):
         # Toggling manual_mode.
         self.manual_mode = not self.manual_mode
         self._cancel_timer(self.on_off_timer)
-        # self.cancelTimer(self.manual_mode_timer)
+        self._cancel_timer(self.manual_mode_timer)
         # Call flashWarning if manual mode is true
         if self.manual_mode:
             self.on = None
             self.log("Manual mode has been turned on, calling flashWarning.")
             self.flashcount = 0
-            self.run_in(self._flash_warning, 1)
-            # self.manual_mode_timer=self.run_in(self.setManualMode, int(
-            # self.args["timer_manual_mode_off"]), value=False)
+            self.run_in(self._flash_warning, 2)
+            self.manual_mode_timer = self.run_in(
+                self._set_manual_mode, int(self.args["timer_manual_mode_off"]), value=False
+            )
 
         if not self.manual_mode and self.get_state(self.args["sensor"]) == "on":
             # TODO: Make this work, don't think it works?
@@ -137,7 +138,7 @@ class AutomateLights(hass.Hass):
             self.toggle(light.get("name"))
         self.flashcount += 1
         if self.flashcount < 4:
-            self.run_in(self._flash_warning, 1)
+            self.run_in(self._flash_warning, 2)
 
 
 def _get_on_brightness(daylight_state, light):
