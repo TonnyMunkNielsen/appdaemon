@@ -27,7 +27,7 @@ light_automation_hallway:
     brightness_dim_night_end: 1
   timer_on_to_dim: 7
   timer_dim_to_off: 3
-  timer_manual_mode_off: 20 # Time until manual mode automatically deactivates in seconds (1200 sec = 20 min).
+  timer_manual_mode_off: 1200 # Time until manual mode automatically deactivates in seconds (1200 sec = 20 min).
   sensor: binary_sensor.motion_sensor_hallway
   sensor_activate_value: "on"
   sensor_deactivate_value: "off"
