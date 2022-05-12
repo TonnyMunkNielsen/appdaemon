@@ -6,5 +6,6 @@ compiled
 apps/__pycache__/
 tests/__pycache__/
 __pycache__/
+Pipfile*
 # Include the following
 !/.gitignore

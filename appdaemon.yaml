@@ -1,17 +1,17 @@
-secrets: /secrets.yaml
+#secrets: /secrets.yaml
 appdaemon:
-  latitude: !secret latitude
-  longitude: !secret longitude
-  elevation: !secret elevation
-  time_zone: !secret time_zone
+  latitude: "0"
+  longitude: "0"
+  elevation: "0"
+  time_zone: "Europe/Copenhagen"
   plugins:
     HASS:
       type: hass
-      ha_url: !secret appdaemon_ha_url
-      token: !secret appdaemon_ha_token
+      ha_url: "https://homeofautomation.duckdns.org"
+      token: "http://192.168.0.112:5050"
       app_init_delay: 20
 http:
-  url: !secret appdaemon_dash_url
+  url: "https://homeofautomation.duckdns.org"
 admin:
 api: 
 hadashboard:
