@@ -43,17 +43,16 @@ class AutomateLightsDaylight(hass.Hass):
 
     def turn_lights_on(self, entity, attribute, old, new, kwargs):
         for light in self.args["lights"]:
-            lightName = light.get("name")
             kwargs = set_default_kwargs_if_empty(kwargs)
             self.turn_light_on_random_daylight(
-                entity=lightName,
+                entity=light.get("name"),
                 hue=kwargs["hue"],
                 saturation=kwargs["saturation"],
                 brightness_pct=kwargs["brightness_pct"],
             )
 
-    def turn_light_on_random_daylight(self, kwargs):
-        entity = kwargs.get("entity")
+    def turn_light_on_random_daylight(self, **kwargs):
+        entity = kwargs["entity"]
         brightness_percent = randint_from_list(kwargs["brightness_pct"])
         saturation = randrange_from_list(kwargs["saturation"])
         hue = randrange_from_list(kwargs["hue"])
