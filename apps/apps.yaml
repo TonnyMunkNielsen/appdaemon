@@ -59,8 +59,8 @@ light_automation_main_bathroom:
   log: light_automation
   lights: 
   - name: light.main_bathroom_lights
-    brightness_on: 100
-    brightness_dim: 33
+    brightness_on: 66
+    brightness_dim: 66
     brightness_on_night_start: 2
     brightness_dim_night_start: 2
     brightness_on_nadir: 2

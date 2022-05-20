@@ -26,14 +26,7 @@ from light_automation_helper import (
 
 class AutomateLightsDaylight(hass.Hass):
     def initialize(self):
-        self.listen_state(
-            self.turn_lights_on,
-            "sensor.daylight",
-            new="dusk",
-            brightness_pct=[100, 100],
-            hue=[0, 360, 30],
-            saturation=[80, 100],
-        )
+        self.listen_state(self.turn_lights_on, "sensor.daylight", new="dusk")
         self.listen_state(self.turn_lights_off, "sensor.daylight", new="dawn")
 
     def turn_lights_off(self, entity, attribute, old, new, kwargs):
