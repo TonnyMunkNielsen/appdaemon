@@ -3,6 +3,6 @@
 logs
 secrets.yaml
 compiled
-# __pycache__/
+__pycache__/
 # Include the following
 !/.gitignore
