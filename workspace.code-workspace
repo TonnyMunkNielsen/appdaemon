@@ -1,9 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
+    "folders": [
+        {
+            "name": "🔍Decompiler!",
+            "uri": "decompileFs:/"
+        },
+        {
+            "path": "."
+        }
+    ],
     "settings": {
         "files.associations": {
             "*.yaml": "home-assistant"

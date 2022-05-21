@@ -5,6 +5,5 @@ secrets.yaml
 compiled
 __pycache__/
 Pipfile*
-workspace.code-workspace
 # Include the following
 !/.gitignore
