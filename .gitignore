@@ -7,3 +7,4 @@ __pycache__/
 Pipfile*
 # Include the following
 !/.gitignore
+workspace.code-workspace
