@@ -7,6 +7,8 @@ from light_automation_helper import (
     randrange_from_list,
 )
 
+# from light_automation_helper import LightAutomationHelper
+
 # Sensor State	    Description
 # sunrise_start	    sunrise (top edge of the sun appears on the horizon)
 # sunrise_end	    sunrise ends (bottom edge of the sun touches the horizon)
@@ -26,14 +28,10 @@ from light_automation_helper import (
 
 class AutomateLightsDaylight(hass.Hass):
     def initialize(self):
-        self.listen_state(
-            self.turn_lights_on,
-            "sensor.daylight",
-            new="dusk",
-            brightness_pct=[100, 100],
-            hue=[0, 360, 30],
-            saturation=[80, 100],
-        )
+        # TODO TMN: Extract functionality into light_automation_helper after test suite is in place.
+        # helpers = self.get_app("light_automation_helper")
+        # self.listen_state(helpers.turn_lights_on, "sensor.daylight", new="dusk")
+        self.listen_state(self.turn_lights_on, "sensor.daylight", new="dusk")
         self.listen_state(self.turn_lights_off, "sensor.daylight", new="dawn")
 
     def turn_lights_off(self, entity, attribute, old, new, kwargs):
