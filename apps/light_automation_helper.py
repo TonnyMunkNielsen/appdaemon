@@ -1,7 +1,7 @@
 import colorsys
 import random
 
-import hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass
 
 
 class LightAutomationHelper(hass.Hass):

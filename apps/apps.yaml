@@ -1,4 +1,4 @@
-light_automation_helper: # Remove this.
+light_automation_helper:
   module: light_automation_helper
   class: LightAutomationHelper
   log: light_automation_helper

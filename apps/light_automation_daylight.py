@@ -1,4 +1,4 @@
-import hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass
 
 from light_automation_helper import (
     get_rgb_int_tuple_from_hsv,
@@ -6,6 +6,8 @@ from light_automation_helper import (
     randint_from_list,
     randrange_from_list,
 )
+
+# from light_automation_helper import LightAutomationHelper
 
 # Sensor State	    Description
 # sunrise_start	    sunrise (top edge of the sun appears on the horizon)
@@ -26,6 +28,9 @@ from light_automation_helper import (
 
 class AutomateLightsDaylight(hass.Hass):
     def initialize(self):
+        # TODO TMN: Extract functionality into light_automation_helper after test suite is in place.
+        # helpers = self.get_app("light_automation_helper")
+        # self.listen_state(helpers.turn_lights_on, "sensor.daylight", new="dusk")
         self.listen_state(self.turn_lights_on, "sensor.daylight", new="dusk")
         self.listen_state(self.turn_lights_off, "sensor.daylight", new="dawn")
 
