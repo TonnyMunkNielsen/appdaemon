@@ -1,4 +1,4 @@
-import hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass
 
 from light_automation_helper import (
     get_rgb_int_tuple_from_hsv,
