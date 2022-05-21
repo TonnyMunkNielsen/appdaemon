@@ -4,13 +4,27 @@ from appdaemon_testing.pytest import automation_fixture
 from apps.light_automation import AutomateLights
 
 
+# TODO TMN: Add more tests.
+
+
 def test_callbacks_are_registered(hass_driver, light_automation: AutomateLights):
     listen_state = hass_driver.get_mock("listen_state")
-    listen_state.assert_called_once_with(
-        light_automation.turn_lights_on,
-        "binary_sensor.motion_sensor_small_bathroom",
-        new="on",
-        old="off",
+    listen_state.assert_has_calls(
+        [
+            mock.call(
+                light_automation.turn_lights_on,
+                "binary_sensor.motion_sensor_small_bathroom",
+                new="on",
+                old="off",
+            ),
+            mock.call(
+                light_automation.dim_lights,
+                "binary_sensor.motion_sensor_small_bathroom",
+                new="off",
+                old="on",
+                duration=300,
+            ),
+        ]
     )
 
 
@@ -19,12 +33,13 @@ def test_lights_are_turned_on_when_motion_detected(
 ):
     with hass_driver.setup():
         hass_driver.set_state("binary_sensor.motion_sensor_small_bathroom", "off")
+        hass_driver.set_state("sensor.daylight", "nadir")
 
     hass_driver.set_state("binary_sensor.motion_sensor_small_bathroom", "on")
 
     turn_on = hass_driver.get_mock("turn_on")
     assert turn_on.call_count == 1
-    turn_on.assert_has_call(mock.call("light.small_bathroom_lights"))
+    turn_on.assert_called_once_with("light.small_bathroom_lights", brightness_pct=5)
 
 
 @automation_fixture(
