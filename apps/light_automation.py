@@ -53,7 +53,9 @@ class AutomateLights(hass.Hass):
     def turn_lights_on(
         self, entity=None, attribute=None, old=None, new=None, kwargs=None
     ):
-        if not self.manual_mode:
+        if (
+            not self.manual_mode
+        ):  # TODO: Move this to appropriate places in initialize for better readability.
             self._cancel_timer(self.on_off_timer)
             __daylight_state = self.get_state("sensor.daylight")
             self.log("Daylight sensor state is " + __daylight_state)
@@ -70,7 +72,9 @@ class AutomateLights(hass.Hass):
             self.on = True
 
     def dim_lights(self, entity, attribute, old, new, kwargs):
-        if not self.manual_mode:
+        if (
+            not self.manual_mode
+        ):  # TODO: Move this to appropriate places in initialize for better readability.
             self._cancel_timer(self.on_off_timer)
             self.log(
                 self.args["sensor"]
@@ -117,7 +121,9 @@ class AutomateLights(hass.Hass):
             self.flashcount = 0
             self.run_in(self._flash_warning, 2)
             self.manual_mode_timer = self.run_in(
-                self._set_manual_mode, int(self.args["timer_manual_mode_off"]), value=False
+                self._set_manual_mode,
+                int(self.args["timer_manual_mode_off"]),
+                value=False,
             )
 
         if not self.manual_mode and self.get_state(self.args["sensor"]) == "on":
