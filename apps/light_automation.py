@@ -32,7 +32,7 @@ class AutomateLights(hass.Hass):
             # 1001: held, 1002: push, 1004: double.
             self.listen_event(
                 self._button_event,
-                event="deconz_event",
+                "deconz_event",
                 value="1001",
                 unique_id=self.args["button_mac"],
             )
