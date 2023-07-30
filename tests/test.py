@@ -1,5 +1,5 @@
 from appdaemon_testing.pytest import automation_fixture
-from light_automation import AutomateLights
+from apps import AutomateLights
 
 
 @automation_fixture(AutomateLights)

@@ -27,12 +27,15 @@ logs:
   light_automation:
     name: LightAutomation
     filename: /conf/logs/applogs/light_automation.log
-  light_automation_daylight:
-    name: LightAutomationDaylight
-    filename: /conf/logs/applogs/light_automation_daylight.log
-  light_sequence:
-    name: LightSequence
-    filename: /conf/logs/applogs/light_sequence.log
-  light_automation_helper:
-    name: LightAutomationHelper
-    filename: /conf/logs/applogs/light_automation_helper.log
+  # light_automation_daylight:
+    # name: LightAutomationDaylight
+    # filename: /conf/logs/applogs/light_automation_daylight.log
+  # light_sequence:
+  #   name: LightSequence
+  #   filename: /conf/logs/applogs/light_sequence.log
+  # light_sequence_new_year_2022:
+  #   name: LightSequenceNewYear2022
+  #   filename: /conf/logs/applogs/light_sequence_new_year_2022.log
+  # light_automation_helper:
+  #   name: LightAutomationHelper
+  #   filename: /conf/logs/applogs/light_automation_helper.log

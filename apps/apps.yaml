@@ -1,98 +1,52 @@
-light_automation_helper:
-  module: light_automation_helper
-  class: LightAutomationHelper
-  log: light_automation_helper
-light_automation_hallway:
+light_automation:
   module: light_automation
-  class: AutomateLights
+  class: LightAutomation
   log: light_automation
-  lights: 
-  - name: light.hallway_lights
-    brightness_on: 100
-    brightness_dim: 33
-    brightness_on_night_start: 66
-    brightness_dim_night_start: 20
-    brightness_on_nadir: 10
-    brightness_dim_nadir: 10
-    brightness_on_night_end: 33
-    brightness_dim_night_end: 10
-  - name: light.laundry_room_lights
-    brightness_on: 50
-    brightness_dim: 1
-    brightness_on_night_start: 25
-    brightness_dim_night_start: 1
-    brightness_on_nadir: 1
-    brightness_dim_nadir: 1
-    brightness_on_night_end: 10
-    brightness_dim_night_end: 1
-  timer_on_to_dim: 7
-  timer_dim_to_off: 3
-  timer_manual_mode_off: 1200 # Time until manual mode automatically deactivates in seconds (1200 sec = 20 min).
-  sensor: binary_sensor.motion_sensor_hallway
-  sensor_activate_value: "on"
-  sensor_deactivate_value: "off"
-  button_mac: 28:6d:97:00:01:11:64:12 # Laundry room button
-light_automation_small_bathroom:
-  module: light_automation
-  class: AutomateLights
-  log: light_automation
-  lights: 
-  - name: light.small_bathroom_lights
-    brightness_on: 100
-    brightness_dim: 33
-    brightness_on_night_start: 66
-    brightness_dim_night_start: 20
-    brightness_on_nadir: 5
-    brightness_dim_nadir: 5
-    brightness_on_night_end: 25
-    brightness_dim_night_end: 5
-  timer_on_to_dim: 300 # 5 minutes
-  timer_dim_to_off: 5
-  timer_manual_mode_off: 900 # Time until manual mode automatically deactivates in seconds (900 sec = 15 min).
-  sensor: binary_sensor.motion_sensor_small_bathroom
-  sensor_activate_value: "on"
-  sensor_deactivate_value: "off"
-  button_mac: 28:6d:97:00:01:11:6d:c7 # Small bathroom button
-light_automation_main_bathroom:
-  module: light_automation
-  class: AutomateLights
-  log: light_automation
-  lights: 
-  - name: light.main_bathroom_lights
-    brightness_on: 66
-    brightness_dim: 66
-    brightness_on_night_start: 2
-    brightness_dim_night_start: 2
-    brightness_on_nadir: 2
-    brightness_dim_nadir: 2
-    brightness_on_night_end: 5
-    brightness_dim_night_end: 5
-  timer_on_to_dim: 300 # 5 minutes
-  timer_dim_to_off: 1
-  timer_manual_mode_off: 300 # Time until manual mode automatically deactivates in seconds (300 sec = 5 min).
-  sensor: binary_sensor.door_sensor_main_bathroom
-  sensor_activate_value: "on"
-  sensor_deactivate_value: "off"
-# DEACTIVATED TO SAVE ENERGY.
-#light_automation_daylight:
-#  module: light_automation_daylight
-#  class: AutomateLightsDaylight
-#  log: light_automation_daylight
-#  lights: 
-#  - name: light.outside_door_wall
-#  - name: light.outside_garage_wall
-#  - name: light.outside_hedge
-#  - name: light.outside_mailbox
-#  dependencies:
-#  - light_automation_helper
-
-  # button_mac: 28:6d:97:00:01:11:64:12 # Laundry room button
-  # button_mac: 28:6d:97:00:01:11:6d:c7 # Small bathroom button
-  # button_mac: 28:6d:97:00:01:07:be:82 # Office button
-  # button_mac: 28:6d:97:00:01:07:c2:46 # Bedroom button
-light_sequence:
-  module: light_sequence
-  class: LightSequence
-  log: light_sequence
-  dependencies:
-  - light_automation_helper
+  motion_sensor: binary_sensor.motion_sensor_small_bathroom
+  door_sensor: binary_sensor.openclose_small_bathroom # Optional: Add this line only if you have a door sensor
+  lights:
+    - entity: light.office_ceiling_closet
+      on_brightness: 200
+      dim_brightness: 50 # Add dim_brightness value for the first light
+      brightness_model: on_dim
+    - entity: light.office_ceiling_desktop
+      on_brightness: 100
+      brightness_model: circadian_rhythm
+  manual_mode: input_boolean.manual_mode_office
+  manual_mode_duration: 30
+  dim_duration: 5
+  off_delay: 15
+  button_unique_id: "28:6d:97:00:01:07:c2:46"
+  
+# button_mac: 28:6d:97:00:01:11:64:12 # Laundry room button
+# button_mac: 28:6d:97:00:01:11:6d:c7 # Small bathroom button
+# button_mac: 28:6d:97:00:01:07:be:82 # Office button
+# button_mac: 28:6d:97:00:01:07:c2:46 # Bedroom button
+# light_sequence:
+#   module: light_sequence
+#   class: LightSequence
+#   log: light_sequence
+#   dependencies:
+#     - light_automation_helper
+# light_sequence_new_year_2022:
+#   module: light_sequence_new_year_2022
+#   class: LightSequenceNewYear2022
+#   log: light_sequence_new_year_2022
+#   dependencies:
+#   - light_automation_helper
+# light_automation_garage:
+#   module: light_automation
+#   class: AutomateLights
+#   log: light_automation
+#   lights:
+#     - name: light.garage_lights
+#       brightness_on: 100
+#       brightness_dim: 33
+#     - name: light.outside_lights
+#       brightness_on: 100
+#       brightness_dim: 33
+#   timer_on_to_dim: 240 # 4 minute
+#   timer_dim_to_off: 5
+#   sensor: binary_sensor.192_168_0_145_motion_active
+#   sensor_activate_value: "on"
+#   sensor_deactivate_value: "off"
