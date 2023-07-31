@@ -5,9 +5,6 @@ from brightness_models import BrightnessModelFactory, BrightnessModelType
 from circadian_rhythm import CircadianRhythmBrightnessModel
 from on_dim import OnDimBrightnessModel
 
-# Time Constants
-SECONDS_TO_MILLISECONDS = 1000
-
 # Event Constants
 BUTTON_PUSH_VALUE = "1002"
 
@@ -31,34 +28,39 @@ class LightAutomation(hass.Hass):
             "door_sensor", None
         )  # Optional: Door sensor (if present)
         self.lights = self.args["lights"]
-        self.manual_mode = self.args["manual_mode"]
         self.manual_mode_duration = int(self.args["manual_mode_duration"])
         self.dim_duration = int(self.args["dim_duration"])
         self.off_delay = int(self.args["off_delay"])
         self.button_unique_id = self.args["button_unique_id"]
-
         # Brightness Model Factory
         self.brightness_model_factory = BrightnessModelFactory()
 
         # State Variables
         self.is_person_inside = False
+        self.manual_mode = False
+
+        # Manual Mode Timer (will be started when manual mode is activated)
+        self.manual_mode_timer = None
 
         # Optional: Door Sensor (if present)
         if self.door_sensor:
             self.listen_state(self.door_state_changed, self.door_sensor)
 
         # Motion Sensor
-        if not self.get_state(self.manual_mode) == "on":
+        if self.manual_mode is False:
             self.listen_state(self.motion_triggered, self.motion_sensor)
         self.listen_event(
-            self.manual_mode_activated,
+            self.manual_mode_button_pushed,
             "deconz_event",
             unique_id=self.button_unique_id,
             value=BUTTON_PUSH_VALUE,
         )
 
-        # Manual Mode Timer (will be started when manual mode is activated)
-        self.manual_mode_timer = None
+        # Timer handles for dimming lights
+        self.light_dim_timer_handles = {}
+
+        # Timer handles for turning lights off
+        self.light_off_timer_handles = {}
 
     # Configuration Parsing and Validation (New Feature: Validate Configuration)
     def parse_config(self):
@@ -133,13 +135,13 @@ class LightAutomation(hass.Hass):
                 )
                 return False
 
-        if not isinstance(self.manual_mode, str) or not self.manual_mode.startswith(
-            "input_boolean."
-        ):
-            self.log(
-                "Invalid manual_mode configuration. Please provide a valid input_boolean entity ID."
-            )
-            return False
+        # if not isinstance(self.manual_mode, str) or not self.manual_mode.startswith(
+        #     "input_boolean."
+        # ):
+        #     self.log(
+        #         "Invalid manual_mode configuration. Please provide a valid input_boolean entity ID."
+        #     )
+        #     return False
 
         if (
             not isinstance(self.manual_mode_duration, int)
@@ -184,18 +186,27 @@ class LightAutomation(hass.Hass):
         """
         if new == "on":
             self.log("Motion detected!")
+            self.cancel_dimming_and_turn_off_lights()
             if not self.is_blocked():
-                self.log("Turning on lights...")
-                for light in self.lights:
-                    self.turn_on(light["entity"], brightness=light["on_brightness"])
                 if self.door_sensor and self.get_state(self.door_sensor) == DoorState.CLOSED.value:
+                    self.log("Motion detected while door is closed - Person presumed to be in room!")
                     self.is_person_inside = True
-                else:
-                    self.dim_lights()
+                for light in self.lights:
+                    light_entity = light["entity"]
+                    on_brightness = light["on_brightness"]
+                    self.log(f"Turning on light '{light_entity}' to brightness: {on_brightness}.")
+                    self.turn_on(light_entity, brightness=on_brightness)
             else:
                 self.log("Person in room, no changes until door opens")
         else:
             self.log("Motion cleared!")
+            if not self.is_blocked():
+                for light in self.lights:
+                    light_entity = light["entity"]
+                    on_brightness = light["on_brightness"]
+                    dim_brightness = light.get("dim_brightness", on_brightness)  # If dim_brightness is not defined, then on_brightness is used.
+                    light_timer_handle = self.run_in(self.dim_light, self.dim_duration, light_entity=light_entity, dim_brightness=dim_brightness)
+                    self.light_dim_timer_handles[light_entity] = light_timer_handle
 
     # Door Sensor State Changed (Optional: If door_sensor is present)
     def door_state_changed(self, entity, attribute, old, new, kwargs):
@@ -211,11 +222,27 @@ class LightAutomation(hass.Hass):
         """
         self.log(f"Door sensor {entity} state changed: {new}")
         if self.is_person_inside is True and new == DoorState.OPEN.value:
+            self.log("Door opened when person was presumed to be in room, person is presumed to have left.")
             self.is_person_inside = False
-            self.dim_lights()
+            self.cancel_dimming_and_turn_off_lights()
+            for light in self.lights:
+                light_entity = light["entity"]
+                light_timer_handle = self.run_in(
+                    self.turn_off_light,
+                    0,
+                    light_entity=light_entity,
+                )
+                self.light_off_timer_handles[light_entity] = light_timer_handle
+
+    # Manual Mode Button Pushed
+    def manual_mode_button_pushed(self, event_name, data, kwargs):
+        if self.is_manual_mode_on():
+            self.manual_mode_deactivated()
+        else:
+            self.manual_mode_activated()
 
     # Manual Mode Activated
-    def manual_mode_activated(self, event_name, data, kwargs):
+    def manual_mode_activated(self):
         """
         Callback function when manual mode is activated.
 
@@ -225,20 +252,24 @@ class LightAutomation(hass.Hass):
             kwargs (dict): Additional keyword arguments.
         """
         self.log("Manual mode activated.")
-        self.call_service("input_boolean/toggle", entity_id=self.manual_mode)
+        self.manual_mode = True
+        self.manual_mode_timer = self.run_in(
+            self.manual_mode_expired_callback, self.manual_mode_duration
+        )
 
-    # Set Manual Mode Off
-    def set_manual_mode_off(self):
+    # Manual Mode Deactivated
+    def manual_mode_deactivated(self):
         """
         Set manual mode off and cancel the manual mode timer.
         """
+        self.log("Manual mode deactivated.")
+        self.manual_mode = False
         self.cancel_timer(self.manual_mode_timer)
-        self.manual_mode_timer = self.run_in(
-            self.manual_mode_timer_callback, self.manual_mode_duration
-        )
+        self.log("Manual mode timer expired. Turning off manual mode.")
+        self.call_service("input_boolean/turn_off", entity_id=self.manual_mode)
 
     # Manual Mode Timer Callback
-    def manual_mode_timer_callback(self, kwargs):
+    def manual_mode_expired_callback(self, kwargs):
         """
         Callback function for the manual mode timer.
 
@@ -249,35 +280,34 @@ class LightAutomation(hass.Hass):
         self.call_service("input_boolean/turn_off", entity_id=self.manual_mode)
 
     # Dim Lights
-    def dim_lights(self):
+    def dim_light(self, kwargs):
         """
         Dim the lights over a specified duration before turning them off.
+
+        Args:
+            kwargs (dict): Additional keyword arguments.
+                light_entity (str): The entity ID of the light to be dimmed.
+                on_brightness (int): The brightness value when the light is fully on.
+                dim_brightness (int): The target brightness value to dim the light.
         """
 
         if self.is_manual_mode_on():
             # Cancel turning off lights if manual mode is activated
             self.cancel_dimming_and_turn_off_lights()
         else:
-            for light in self.lights:
-                light_entity = light["entity"]
-                on_brightness = light["on_brightness"]
-                dim_brightness = light.get("dim_brightness", on_brightness)
-                self.log(f"Dimming lights {light_entity} from {on_brightness} to {dim_brightness} over {self.dim_duration} seconds.")
-                self.turn_on(
-                    light_entity,
-                    brightness=on_brightness,
-                    transition=self.dim_duration * SECONDS_TO_MILLISECONDS,
-                )
-                self.run_in(
-                    self.turn_off_lights,
-                    self.dim_duration,
-                    light_entity=light_entity,
-                    on_brightness=on_brightness,
-                    dim_brightness=dim_brightness,
-                )
+            light_entity = kwargs["light_entity"]
+            dim_brightness = kwargs["dim_brightness"]
+            self.log(f"Dimming light '{light_entity}' to brightness: {dim_brightness}.")
+            self.turn_on(light_entity, brightness=dim_brightness)
+            light_timer_handle = self.run_in(
+                self.turn_off_light,
+                self.off_delay,
+                light_entity=light_entity,
+            )
+            self.light_off_timer_handles[light_entity] = light_timer_handle
 
     # Turn Off Lights
-    def turn_off_lights(self, kwargs):
+    def turn_off_light(self, kwargs):
         """
         Turn off the lights.
 
@@ -288,24 +318,10 @@ class LightAutomation(hass.Hass):
             # Cancel turning off lights if manual mode is activated
             self.cancel_dimming_and_turn_off_lights()
         else:
-            light_entity = kwargs["light_entity"]
-            on_brightness = kwargs["on_brightness"]
-            dim_brightness = kwargs["dim_brightness"]
-            self.turn_on(light_entity, brightness=dim_brightness)
-            self.run_in(self.check_off_delay, self.off_delay, light_entity=light_entity)
-
-    # Check Off Delay
-    def check_off_delay(self, kwargs):
-        """
-        Check if lights should be turned off after the off delay.
-
-        Args:
-            kwargs (dict): Additional keyword arguments.
-        """
-        light_entity = kwargs["light_entity"]
-        if not self.is_blocked() and self.get_state(self.motion_sensor) == "off":
-            self.log("Turning off lights.")
-            self.turn_off(light_entity)
+            if not self.is_blocked() and not self.is_manual_mode_on():
+                light_entity = kwargs["light_entity"]
+                self.log(f"Turning off light '{light_entity}'.")
+                self.turn_off(light_entity)
 
     # Check if Blocked (Is Person Inside Room)
     def is_blocked(self):
@@ -323,19 +339,25 @@ class LightAutomation(hass.Hass):
         Check if manual mode is currently on.
 
         Returns:
-            bool: True if manual mode is on, False otherwise.
+            bool: True if manual mode is True, False otherwise.
         """
-        return self.get_state(self.manual_mode) == "on"
+        return self.manual_mode is True
 
     # Cancel Dimming and Turning Off Lights if Manual Mode is On
     def cancel_dimming_and_turn_off_lights(self):
         """
-        Cancel scheduled dimming and turning off lightS.
+        Cancel scheduled dimming and turning off lights.
         """
-        for light in self.lights:
-            light_entity = light["entity"]
-            self.cancel_timer(self.manual_mode_timer)
-            self.cancel_timer(f"{light_entity}_dim_timer")
+        for light_entity, light_dim_timer_handles in self.light_dim_timer_handles.items():
+            # Cancel the scheduled timer for this light_entity
+            self.cancel_timer(light_dim_timer_handles)
 
+        for light_entity, light_off_timer_handles in self.light_off_timer_handles.items():
+            # Cancel the scheduled timer for this light_entity
+            self.cancel_timer(light_off_timer_handles)
+
+        # Clear the timer handles dictionaries
+        self.light_dim_timer_handles = {}
+        self.light_off_timer_handles = {}
 
 # ... End of the Light Automation class ...

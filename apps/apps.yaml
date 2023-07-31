@@ -5,17 +5,17 @@ light_automation:
   motion_sensor: binary_sensor.motion_sensor_small_bathroom
   door_sensor: binary_sensor.openclose_small_bathroom # Optional: Add this line only if you have a door sensor
   lights:
-    - entity: light.office_ceiling_closet
-      on_brightness: 200
-      dim_brightness: 50 # Add dim_brightness value for the first light
+    - entity: light.small_bathroom_mirror
+      on_brightness: 255
+      dim_brightness: 85 # Optional: If dim_brightness is not defined, then on_brightness is used.
       brightness_model: on_dim
-    - entity: light.office_ceiling_desktop
-      on_brightness: 100
-      brightness_model: circadian_rhythm
-  manual_mode: input_boolean.manual_mode_office
-  manual_mode_duration: 30
-  dim_duration: 5
-  off_delay: 15
+    - entity: light.small_bathroom_shower
+      on_brightness: 255
+      dim_brightness: 85 # Optional: If dim_brightness is not defined, then on_brightness is used.
+      brightness_model: on_dim
+  manual_mode_duration: 300
+  dim_duration: 30
+  off_delay: 5
   button_unique_id: "28:6d:97:00:01:07:c2:46"
   
 # button_mac: 28:6d:97:00:01:11:64:12 # Laundry room button
