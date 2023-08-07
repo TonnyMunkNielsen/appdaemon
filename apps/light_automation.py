@@ -19,16 +19,14 @@ class LightAutomation(hass.Hass):
         # Mapping of brightness model types to their corresponding classes
         self.model_mapping = {
             BrightnessModelType.ON_DIM: OnDimBrightnessModel(),
-            BrightnessModelType.CIRCADIAN_RHYTHM: CircadianRhythmBrightnessModel()
+            BrightnessModelType.CIRCADIAN_RHYTHM: CircadianRhythmBrightnessModel(),
         }
 
         # Configuration
         self.motion_sensor = self.args["motion_sensor"]
-        self.door_sensor = self.args.get(
-            "door_sensor", None
-        )  # Optional: Door sensor (if present)
+        self.door_sensor = self.args.get("door_sensor", None)  # Optional: Door sensor (if present)
         self.lights = self.args["lights"]
-        self.manual_mode_duration = int(self.args["manual_mode_duration"])
+        self.manual_mode_duration = int(self.args.get("manual_mode_duration", 0))
         self.dim_duration = int(self.args["dim_duration"])
         self.off_delay = int(self.args["off_delay"])
         self.button_unique_id = self.args["button_unique_id"]
@@ -188,13 +186,20 @@ class LightAutomation(hass.Hass):
             self.log("Motion detected!")
             self.cancel_dimming_and_turn_off_lights()
             if not self.is_blocked():
-                if self.door_sensor and self.get_state(self.door_sensor) == DoorState.CLOSED.value:
-                    self.log("Motion detected while door is closed - Person presumed to be in room!")
+                if (
+                    self.door_sensor
+                    and self.get_state(self.door_sensor) == DoorState.CLOSED.value
+                ):
+                    self.log(
+                        "Motion detected while door is closed - Person presumed to be in room!"
+                    )
                     self.is_person_inside = True
                 for light in self.lights:
                     light_entity = light["entity"]
                     on_brightness = light["on_brightness"]
-                    self.log(f"Turning on light '{light_entity}' to brightness: {on_brightness}.")
+                    self.log(
+                        f"Turning on light '{light_entity}' to brightness: {on_brightness}."
+                    )
                     self.turn_on(light_entity, brightness=on_brightness)
             else:
                 self.log("Person in room, no changes until door opens")
@@ -204,8 +209,15 @@ class LightAutomation(hass.Hass):
                 for light in self.lights:
                     light_entity = light["entity"]
                     on_brightness = light["on_brightness"]
-                    dim_brightness = light.get("dim_brightness", on_brightness)  # If dim_brightness is not defined, then on_brightness is used.
-                    light_timer_handle = self.run_in(self.dim_light, self.dim_duration, light_entity=light_entity, dim_brightness=dim_brightness)
+                    dim_brightness = light.get(
+                        "dim_brightness", on_brightness
+                    )  # If dim_brightness is not defined, then on_brightness is used.
+                    light_timer_handle = self.run_in(
+                        self.dim_light,
+                        self.dim_duration,
+                        light_entity=light_entity,
+                        dim_brightness=dim_brightness,
+                    )
                     self.light_dim_timer_handles[light_entity] = light_timer_handle
 
     # Door Sensor State Changed (Optional: If door_sensor is present)
@@ -222,7 +234,9 @@ class LightAutomation(hass.Hass):
         """
         self.log(f"Door sensor {entity} state changed: {new}")
         if self.is_person_inside is True and new == DoorState.OPEN.value:
-            self.log("Door opened when person was presumed to be in room, person is presumed to have left.")
+            self.log(
+                "Door opened when person was presumed to be in room, person is presumed to have left."
+            )
             self.is_person_inside = False
             self.cancel_dimming_and_turn_off_lights()
             for light in self.lights:
@@ -264,9 +278,11 @@ class LightAutomation(hass.Hass):
         """
         self.log("Manual mode deactivated.")
         self.manual_mode = False
-        self.cancel_timer(self.manual_mode_timer)
-        self.log("Manual mode timer expired. Turning off manual mode.")
-        self.call_service("input_boolean/turn_off", entity_id=self.manual_mode)
+        if (
+            self.manual_mode_timer is not None
+            and self.manual_mode_timer in self.callbacks
+        ):
+            self.cancel_timer(self.manual_mode_timer)
 
     # Manual Mode Timer Callback
     def manual_mode_expired_callback(self, kwargs):
@@ -277,7 +293,7 @@ class LightAutomation(hass.Hass):
             kwargs (dict): Additional keyword arguments.
         """
         self.log("Manual mode timer expired. Turning off manual mode.")
-        self.call_service("input_boolean/turn_off", entity_id=self.manual_mode)
+        self.manual_mode = False
 
     # Dim Lights
     def dim_light(self, kwargs):
@@ -348,16 +364,23 @@ class LightAutomation(hass.Hass):
         """
         Cancel scheduled dimming and turning off lights.
         """
-        for light_entity, light_dim_timer_handles in self.light_dim_timer_handles.items():
+        for (
+            light_entity,
+            light_dim_timer_handles,
+        ) in self.light_dim_timer_handles.items():
             # Cancel the scheduled timer for this light_entity
             self.cancel_timer(light_dim_timer_handles)
 
-        for light_entity, light_off_timer_handles in self.light_off_timer_handles.items():
+        for (
+            light_entity,
+            light_off_timer_handles,
+        ) in self.light_off_timer_handles.items():
             # Cancel the scheduled timer for this light_entity
             self.cancel_timer(light_off_timer_handles)
 
         # Clear the timer handles dictionaries
         self.light_dim_timer_handles = {}
         self.light_off_timer_handles = {}
+
 
 # ... End of the Light Automation class ...

@@ -1,23 +1,52 @@
-light_automation:
+light_automation_small_bathroom:
   module: light_automation
   class: LightAutomation
   log: light_automation
   motion_sensor: binary_sensor.motion_sensor_small_bathroom
   door_sensor: binary_sensor.openclose_small_bathroom # Optional: Add this line only if you have a door sensor
   lights:
-    - entity: light.small_bathroom_mirror
+    - entity: light.small_bathroom_lights
       on_brightness: 255
       dim_brightness: 85 # Optional: If dim_brightness is not defined, then on_brightness is used.
       brightness_model: on_dim
-    - entity: light.small_bathroom_shower
-      on_brightness: 255
-      dim_brightness: 85 # Optional: If dim_brightness is not defined, then on_brightness is used.
-      brightness_model: on_dim
-  manual_mode_duration: 300
+  manual_mode_duration: 900
   dim_duration: 30
   off_delay: 5
-  button_unique_id: "28:6d:97:00:01:07:c2:46"
-  
+  button_unique_id: "28:6d:97:00:01:11:6d:c7"
+
+light_automation_hallway:
+  module: light_automation
+  class: LightAutomation
+  log: light_automation
+  motion_sensor: binary_sensor.presence_hallway
+  lights:
+    - entity: light.hallway_lights
+      on_brightness: 255
+      dim_brightness: 85 # Optional: If dim_brightness is not defined, then on_brightness is used.
+      brightness_model: on_dim
+    - entity: light.laundry_room_lights
+      on_brightness: 128
+      dim_brightness: 1 # Optional: If dim_brightness is not defined, then on_brightness is used.
+      brightness_model: on_dim
+  manual_mode_duration: 300
+  dim_duration: 7
+  off_delay: 3
+  button_unique_id: "28:6d:97:00:01:11:64:12"
+
+# light_automation_main_bathroom:
+#   module: light_automation
+#   class: LightAutomation
+#   log: light_automation
+#   motion_sensor: binary_sensor.motion_sensor_main_bathroom
+#   door_sensor: binary_sensor.door_sensor_main_bathroom
+#   lights:
+#     - entity: light.main_bathroom_lights
+#       on_brightness: 255
+#       dim_brightness: 85 # Optional: If dim_brightness is not defined, then on_brightness is used.
+#       brightness_model: on_dim
+#   dim_duration: 30
+#   off_delay: 5
+
 # button_mac: 28:6d:97:00:01:11:64:12 # Laundry room button
 # button_mac: 28:6d:97:00:01:11:6d:c7 # Small bathroom button
 # button_mac: 28:6d:97:00:01:07:be:82 # Office button
